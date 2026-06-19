@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════════
+   grid.css — Spreadsheet table, cells, selection styles
+═══════════════════════════════════════════════════════════ */
+
+/* ── Grid table ────────────────────────────────────────────── */
+.grid-table {
+  border-collapse: collapse;
+  outline: none;
+  user-select: none;
+  table-layout: fixed;
+}
+
+/* ── Sticky column headers ─────────────────────────────────── */
+.grid-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: var(--bg-2);
+  border-bottom: 2px solid var(--border-1);
+}
+
+/* Corner */
+.corner-cell {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 8;
+  width: 48px;
+  min-width: 48px;
+  background: var(--bg-2);
+  border-right: 2px solid var(--border-1);
+  border-bottom: 2px solid var(--border-1);
+}
+
+.col-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  text-align: center;
+  width: 100px;
+  min-width: 72px;
+  height: 22px;
+  padding: 0 4px;
+  border-right: 1px solid var(--border-0);
+  transition: background 0.1s, color 0.1s;
+  cursor: default;
+}
+
+.col-header.col-active {
+  background: var(--green-dim);
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+
+/* ── Sticky row headers ────────────────────────────────────── */
+.row-header {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-2);
+  text-align: right;
+  width: 48px;
+  min-width: 48px;
+  padding: 0 6px 0 0;
+  height: 24px;
+  border-right: 2px solid var(--border-1);
+  border-bottom: 1px solid var(--border-0);
+  user-select: none;
+  cursor: default;
+  transition: background 0.1s, color 0.1s;
+}
+
+.row-header.row-active {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+/* ── Data cells ────────────────────────────────────────────── */
+.grid-cell {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  height: 24px;
+  width: 100px;
+  min-width: 72px;
+  max-width: 100px;
+  padding: 0 5px;
+  border-right: 1px solid var(--border-0);
+  border-bottom: 1px solid var(--border-0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: cell;
+  outline: none;
+  color: var(--text-0);
+  text-align: left;
+  vertical-align: middle;
+  background: var(--bg-1);
+  transition: background 0.06s ease;
+}
+
+.grid-cell:hover:not(.cell-active):not(.cell-selected) {
+  background: var(--bg-3);
+}
+
+/* ── Cell type classes ─────────────────────────────────────── */
+.grid-cell.cell-number,
+.grid-cell.cell-formula-num { color: var(--blue);  text-align: right; }
+.grid-cell.cell-formula      { color: var(--green); }
+.grid-cell.cell-text         { color: var(--text-0); text-align: left; }
+.grid-cell.cell-error        { color: var(--red);  font-weight: 600; }
+
+/* ── Selection ─────────────────────────────────────────────── */
+.grid-cell.cell-selected {
+  background: var(--blue-glow) !important;
+  outline: none;
+}
+
+.grid-cell.cell-active {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 2px var(--blue);
+  z-index: 2;
+  position: relative;
+}
+
+/* ── Dependency highlights ─────────────────────────────────── */
+/* Cells that the active cell READS FROM */
+.grid-cell.dep-source {
+  background: var(--green-glow) !important;
+  box-shadow: inset 0 0 0 1px rgba(45,212,160,0.4);
+}
+
+/* Cells that READ FROM the active cell */
+.grid-cell.dep-consumer {
+  background: var(--amber-glow) !important;
+  box-shadow: inset 0 0 0 1px rgba(251,191,36,0.3);
+}
+
+/* ── Cascade flash animation ───────────────────────────────── */
+@keyframes cellCascade {
+  0%   { background: rgba(251,191,36,0.3); }
+  100% { background: transparent; }
+}
+
+.grid-cell.cell-cascade {
+  animation: cellCascade 0.65s ease-out forwards;
+}

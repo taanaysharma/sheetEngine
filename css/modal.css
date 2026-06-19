@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════
+   modal.css — Keyboard shortcuts modal
+═══════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal {
+  background: var(--bg-2);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  width: 760px;
+  max-width: 96vw;
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+}
+
+.modal-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-0);
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-0);
+}
+
+.modal-close {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--text-1);
+  font-size: 14px;
+  padding: 3px 7px;
+  line-height: 1;
+  transition: all 0.1s;
+}
+.modal-close:hover {
+  background: var(--bg-4);
+  border-color: var(--border-1);
+  color: var(--text-0);
+}
+
+.modal-body {
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.modal-body::-webkit-scrollbar { width: 4px; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-1); border-radius: 2px; }
+
+.modal-section {
+  flex: 1;
+  min-width: 280px;
+}
+
+.modal-section-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-0);
+}
+
+/* Shortcut key grid */
+.shortcut-table {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  align-items: center;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--border-2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  color: var(--amber);
+  white-space: nowrap;
+  box-shadow: 0 1px 0 var(--border-2);
+}
+
+.shortcut-table span { font-size: 11px; color: var(--text-1); }
+
+/* Formula reference */
+.formula-ref-table {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  align-items: center;
+}
+
+.formula-ref-table code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--green);
+  background: var(--bg-3);
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.formula-ref-table code.err { color: var(--red); }
+.formula-ref-table span { font-size: 11px; color: var(--text-1); }
+
+/* ═══════════════════════════════════════════════════════════
+   chart.css — Chart panel
+═══════════════════════════════════════════════════════════ */
+
+.chart-panel {
+  height: var(--chart-h);
+  flex-shrink: 0;
+  background: var(--bg-2);
+  border-top: 1px solid var(--border-0);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: height 0.2s ease;
+}
+
+.chart-panel.chart-hidden {
+  height: 0;
+  border-top: none;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-0);
+  flex-shrink: 0;
+}
+
+.chart-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.chart-type-btns {
+  display: flex;
+  gap: 2px;
+}
+
+.chart-type-btn {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border-1);
+  background: transparent;
+  color: var(--text-1);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.chart-type-btn:hover     { background: var(--bg-4); color: var(--text-0); }
+.chart-type-btn.active    { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+
+.chart-render-btn {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--green-dim);
+  background: var(--green-dim);
+  color: var(--green);
+  cursor: pointer;
+  transition: all 0.1s;
+  margin-left: auto;
+}
+.chart-render-btn:hover { background: rgba(45,212,160,0.2); border-color: var(--green); }
+
+.chart-canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-status {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-2);
+  padding: 3px 12px;
+  border-top: 1px solid var(--border-0);
+  flex-shrink: 0;
+}

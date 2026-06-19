@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════════════════════
+   base.css — Design tokens, reset, layout shell
+═══════════════════════════════════════════════════════════ */
+:root {
+  /* ── Palette ───────────────────────────────────────────── */
+  --bg-0:       #0b0f17;   /* deepest */
+  --bg-1:       #111827;   /* app bg */
+  --bg-2:       #1a2236;   /* surface / header */
+  --bg-3:       #1f2d45;   /* raised panel */
+  --bg-4:       #263552;   /* hover */
+
+  --border-0:   #1c2b42;
+  --border-1:   #263859;
+  --border-2:   #31497a;
+
+  --text-0:     #e2eaf5;   /* primary */
+  --text-1:     #8fa8cc;   /* muted */
+  --text-2:     #4d6a8f;   /* dim */
+  --text-3:     #2d4060;   /* very dim */
+
+  /* ── Accent colours ─────────────────────────────────────── */
+  --green:      #2dd4a0;
+  --green-dim:  #0b3327;
+  --green-glow: rgba(45,212,160,0.15);
+
+  --blue:       #60a5fa;
+  --blue-dim:   #102040;
+  --blue-glow:  rgba(96,165,250,0.12);
+
+  --amber:      #fbbf24;
+  --amber-dim:  #3b2700;
+  --amber-glow: rgba(251,191,36,0.12);
+
+  --red:        #f87171;
+  --red-dim:    #3b0f0f;
+  --purple:     #c084fc;
+  --purple-dim: #2d1058;
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-ui:   'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --header-h:   48px;
+  --formula-h:  34px;
+  --status-h:   22px;
+  --sidebar-w:  240px;
+  --chart-h:    200px;
+  --radius:     5px;
+  --radius-lg:  8px;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-1);
+  color: var(--text-0);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; }
+input  { font-family: inherit; }
+
+/* ── App shell ─────────────────────────────────────────────── */
+.workspace {
+  display: flex;
+  height: calc(100vh - var(--header-h) - var(--formula-h) - var(--status-h));
+  overflow: hidden;
+}
+
+.grid-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.grid-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: var(--bg-1);
+}
+
+/* Scrollbar */
+.grid-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.grid-scroll::-webkit-scrollbar-track  { background: var(--bg-2); }
+.grid-scroll::-webkit-scrollbar-thumb  { background: var(--border-2); border-radius: 4px; }
+.grid-scroll::-webkit-scrollbar-corner { background: var(--bg-2); }
+
+/* ── Status bar ────────────────────────────────────────────── */
+.status-bar {
+  height: var(--status-h);
+  background: var(--bg-2);
+  border-top: 1px solid var(--border-0);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.03em;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── Utility ───────────────────────────────────────────────── */
+.hidden  { display: none !important; }
+.mono    { font-family: var(--font-mono); }
+.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

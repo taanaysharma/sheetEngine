@@ -1,0 +1,207 @@
+/* ═══════════════════════════════════════════════════════════
+   toolbar.css — App header, toolbar buttons, formula bar
+═══════════════════════════════════════════════════════════ */
+
+/* ── App header ────────────────────────────────────────────── */
+.app-header {
+  height: var(--header-h);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-0);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+  overflow-x: auto;
+}
+
+.app-header::-webkit-scrollbar { display: none; }
+
+/* ── Brand ─────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.brand-icon { font-size: 14px; }
+
+.brand-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.brand-sub {
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  display: none; /* shown on wider screens */
+}
+
+@media (min-width: 1100px) {
+  .brand-sub { display: block; }
+}
+
+/* ── Toolbar groups ────────────────────────────────────────── */
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.toolbar-group::-webkit-scrollbar { display: none; }
+
+.tb-cluster {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tb-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-1);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Toolbar buttons ────────────────────────────────────────── */
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-1);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 4px 8px;
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.1s ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.tb-btn:hover:not(:disabled) {
+  background: var(--bg-4);
+  border-color: var(--border-1);
+  color: var(--text-0);
+}
+
+.tb-btn:active:not(:disabled) { transform: scale(0.96); }
+
+.tb-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.tb-btn.accent {
+  border-color: var(--green-dim);
+  color: var(--green);
+}
+.tb-btn.accent:hover:not(:disabled) {
+  background: var(--green-dim);
+  border-color: var(--green);
+}
+
+.tb-btn.active {
+  background: var(--blue-dim);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.fmt-btn {
+  width: 28px;
+  padding: 4px 0;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.sidebar-toggle {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Formula bar ────────────────────────────────────────────── */
+.formula-row {
+  height: var(--formula-h);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-0);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 0;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.cell-ref-box {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  width: 60px;
+  flex-shrink: 0;
+  background: var(--bg-3);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius);
+  color: var(--green);
+  padding: 3px 6px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.cell-ref-box:focus { border-color: var(--green); }
+
+.formula-fx {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 0 8px;
+  flex-shrink: 0;
+  user-select: none;
+  font-style: italic;
+}
+
+.formula-input {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-0);
+  outline: none;
+  padding: 4px 0;
+  caret-color: var(--green);
+  min-width: 0;
+}
+
+.formula-input::placeholder { color: var(--text-3); font-size: 11px; }
+
+.formula-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--amber);
+  padding: 0 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

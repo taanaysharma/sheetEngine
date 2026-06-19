@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SheetEngine — Spreadsheet from Scratch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/grid.css" />
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/toolbar.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/chart.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER / TOOLBAR
+═══════════════════════════════════════════ -->
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-icon">⬛</div>
+    <span class="brand-name">SheetEngine</span>
+    <span class="brand-sub">Compiler Pipeline · DAG Evaluator · Recursive Descent Parser</span>
+  </div>
+
+  <div class="toolbar-group">
+    <div class="tb-cluster">
+      <button class="tb-btn" id="btnUndo" disabled title="Undo (Ctrl+Z)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+        Undo
+      </button>
+      <button class="tb-btn" id="btnRedo" disabled title="Redo (Ctrl+Shift+Z)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
+        Redo
+      </button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-cluster">
+      <button class="tb-btn accent" id="btnDemo" title="Load financial model demo">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Load Demo
+      </button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-cluster">
+      <button class="tb-btn" id="btnExportCSV" title="Export as CSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        CSV
+      </button>
+      <label class="tb-btn" title="Import CSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import
+        <input type="file" id="csvFileInput" accept=".csv" hidden />
+      </label>
+      <button class="tb-btn" id="btnSaveJSON" title="Save as JSON (preserves formulas)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save
+      </button>
+      <label class="tb-btn" title="Load JSON">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Load
+        <input type="file" id="jsonFileInput" accept=".json" hidden />
+      </label>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-cluster">
+      <button class="tb-btn fmt-btn" id="btnBold"   title="Bold (selected cells)"><b>B</b></button>
+      <button class="tb-btn fmt-btn" id="btnItalic" title="Italic (selected cells)"><i>I</i></button>
+      <button class="tb-btn fmt-btn" id="btnAlignLeft"   title="Align left">⬅</button>
+      <button class="tb-btn fmt-btn" id="btnAlignCenter" title="Align center">↔</button>
+      <button class="tb-btn fmt-btn" id="btnAlignRight"  title="Align right">➡</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-cluster">
+      <button class="tb-btn fmt-btn" id="btnFmtGeneral"  title="General format">G</button>
+      <button class="tb-btn fmt-btn" id="btnFmtNumber"   title="Number (2 dp)">0.00</button>
+      <button class="tb-btn fmt-btn" id="btnFmtCurrency" title="Currency (₹)">₹</button>
+      <button class="tb-btn fmt-btn" id="btnFmtPercent"  title="Percentage">%</button>
+    </div>
+
+    <div class="tb-divider"></div>
+
+    <div class="tb-cluster">
+      <button class="tb-btn" id="btnToggleChart" title="Toggle chart panel">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Chart
+      </button>
+      <button class="tb-btn" id="btnClear" title="Clear all cells">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Clear
+      </button>
+      <button class="tb-btn" id="btnHelp" title="Keyboard shortcuts">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Help
+      </button>
+    </div>
+  </div>
+
+  <button class="tb-btn sidebar-toggle" id="btnToggleSidebar" title="Toggle sidebar">◀</button>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     FORMULA BAR
+═══════════════════════════════════════════ -->
+<div class="formula-row">
+  <input class="cell-ref-box" id="cellRef" value="A1" autocomplete="off" spellcheck="false" />
+  <div class="formula-fx">fx</div>
+  <input class="formula-input" id="formulaBar"
+    placeholder="Click a cell and type a value or formula like =SUM(A1:A10)"
+    autocomplete="off" spellcheck="false" />
+  <span class="formula-hint" id="formulaHints"></span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN WORKSPACE
+═══════════════════════════════════════════ -->
+<div class="workspace">
+
+  <!-- GRID -->
+  <div class="grid-wrap">
+    <div class="grid-scroll" id="gridContainer"></div>
+
+    <!-- CHART PANEL (toggled) -->
+    <div class="chart-panel chart-hidden" id="chartPanel"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar"></aside>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar" id="statusBar">Ready</div>
+
+<!-- ═══════════════════════════════════════════
+     SHORTCUTS MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="shortcutsModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Keyboard Shortcuts &amp; Formula Reference</span>
+      <button class="modal-close" id="closeShortcuts">✕</button>
+    </div>
+    <div class="modal-body two-col">
+
+      <!-- Navigation -->
+      <div class="modal-section">
+        <div class="modal-section-title">Navigation</div>
+        <div class="shortcut-table">
+          <kbd>↑↓←→</kbd><span>Move cell cursor</span>
+          <kbd>Shift+Arrow</kbd><span>Extend selection</span>
+          <kbd>Tab</kbd><span>Move right / confirm</span>
+          <kbd>Shift+Tab</kbd><span>Move left</span>
+          <kbd>Enter</kbd><span>Move down / confirm</span>
+          <kbd>Ctrl+Home</kbd><span>Go to A1</span>
+          <kbd>Ctrl+End</kbd><span>Go to last cell</span>
+          <kbd>Page Down/Up</kbd><span>Scroll 15 rows</span>
+          <kbd>F2</kbd><span>Start editing</span>
+          <kbd>Escape</kbd><span>Cancel edit</span>
+        </div>
+      </div>
+
+      <!-- Editing -->
+      <div class="modal-section">
+        <div class="modal-section-title">Editing</div>
+        <div class="shortcut-table">
+          <kbd>Ctrl+Z</kbd><span>Undo</span>
+          <kbd>Ctrl+Shift+Z</kbd><span>Redo</span>
+          <kbd>Ctrl+C</kbd><span>Copy cell/range</span>
+          <kbd>Ctrl+V</kbd><span>Paste</span>
+          <kbd>Ctrl+D</kbd><span>Fill down</span>
+          <kbd>Delete</kbd><span>Clear cell(s)</span>
+          <kbd>Ctrl+S</kbd><span>Save JSON</span>
+          <kbd>Type anything</kbd><span>Begin editing</span>
+        </div>
+      </div>
+
+      <!-- Formula syntax -->
+      <div class="modal-section">
+        <div class="modal-section-title">Formula Syntax</div>
+        <div class="formula-ref-table">
+          <code>=A1+B1</code><span>Arithmetic</span>
+          <code>=A1*B2-C3/D4</code><span>Operator precedence (PEMDAS)</span>
+          <code>=A1^2</code><span>Exponentiation</span>
+          <code>=A1&amp;" "&amp;B1</code><span>String concat (&amp; operator)</span>
+          <code>=SUM(A1:A10)</code><span>Range function</span>
+          <code>=IF(A1>0,"+"&amp;A1,-A1)</code><span>Nested formula</span>
+          <code>=VLOOKUP(A1,B1:D10,2)</code><span>Lookup</span>
+          <code>=IFERROR(A1/B1,0)</code><span>Error trap</span>
+        </div>
+      </div>
+
+      <!-- Error values -->
+      <div class="modal-section">
+        <div class="modal-section-title">Error Values</div>
+        <div class="formula-ref-table">
+          <code class="err">#DIV/0!</code><span>Division by zero</span>
+          <code class="err">#VALUE!</code><span>Wrong argument type</span>
+          <code class="err">#NAME?</code><span>Unknown function</span>
+          <code class="err">#REF!</code><span>Invalid cell reference</span>
+          <code class="err">#CYCLE!</code><span>Circular dependency</span>
+          <code class="err">#N/A</code><span>Value not found (VLOOKUP etc.)</span>
+          <code class="err">#ERROR!</code><span>Parse or eval error</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS  (order is critical)
+═══════════════════════════════════════════ -->
+<script src="js/utils/format.js"></script>
+<script src="js/core/address.js"></script>
+<script src="js/core/dag.js"></script>
+<script src="js/formula/lexer.js"></script>
+<script src="js/formula/parser.js"></script>
+<script src="js/formula/evaluator.js"></script>
+<script src="js/core/store.js"></script>
+<script src="js/core/history.js"></script>
+<script src="js/io/serializer.js"></script>
+<script src="js/ui/selection.js"></script>
+<script src="js/ui/renderer.js"></script>
+<script src="js/ui/grid.js"></script>
+<script src="js/ui/sidebar.js"></script>
+<script src="js/ui/toolbar.js"></script>
+<script src="js/charts/sparkline.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
