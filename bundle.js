@@ -4882,9 +4882,17 @@ class ChartPanel {
 document.addEventListener('DOMContentLoaded', function() {
 
   // ─── INSTANTIATION ─────────────────────────────────────────────────────────
+  // IMPORTANT: sidebar and chartPanel must be declared BEFORE grid,
+  // because grid's constructor fires onSelectionChange immediately,
+  // which references sidebar and chartPanel. Using let so they can be
+  // assigned after declaration but before grid constructor runs.
 
   const store   = new CellStore();
   const history = new HistoryStack(300);
+
+  // Declare first — assigned below before grid constructor fires the callback
+  let sidebar    = null;
+  let chartPanel = null;
 
   const grid = new Grid({
     gridContainer: document.getElementById('gridContainer'),
@@ -4895,20 +4903,22 @@ document.addEventListener('DOMContentLoaded', function() {
     rows: 60,
     cols: 20,
     onSelectionChange: (info, cell) => {
-      sidebar.update(info.activeAddr, cell);
-      chartPanel.onSelectionChange();
+      // Guard: sidebar/chartPanel may not be assigned yet during construction
+      if (sidebar)    sidebar.update(info.activeAddr, cell);
+      if (chartPanel) chartPanel.onSelectionChange();
       _updateStatusBar(info, cell);
     },
   });
 
-  const sidebar = new Sidebar(
+  // Now assign — grid constructor has finished
+  sidebar = new Sidebar(
     document.getElementById('sidebar'),
     store,
     history,
     (addr) => grid.goTo(addr)
   );
 
-  const chartPanel = new ChartPanel(
+  chartPanel = new ChartPanel(
     document.getElementById('chartPanel'),
     store,
     () => grid.selection
@@ -5024,12 +5034,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, cell);
 
     // Keep sidebar stats fresh
-    sidebar._renderStats();
-    sidebar._renderHistory();
+    if (sidebar) sidebar._renderStats();
+    if (sidebar) sidebar._renderHistory();
   });
 
   history.onChange(() => {
-    sidebar._renderHistory();
+    if (sidebar) sidebar._renderHistory();
   });
 
   // ─── SIDEBAR TOGGLE (mobile / narrow screens) ──────────────────────────────
